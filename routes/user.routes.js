@@ -1,4 +1,4 @@
-import { creatNewUser, getAllUsers } from "../controllers/user.controller.js";
+import { creatNewUser, getAllUsers, deletUserByID, getUserByID } from "../controllers/user.controller.js";
 
  export const userRouter = (req, res) => {
 
@@ -10,7 +10,15 @@ import { creatNewUser, getAllUsers } from "../controllers/user.controller.js";
         return getAllUsers(req, res)
     }
 
-    if(req.method === "DELETE" && req.url === "/users") {
-        return getAllUsers()
+    if(req.method === "GET" && req.url.startsWith("/users/")) {
+        const id = req.url.split("/")[2]
+        req.params = {id};
+        return getUserByID(req, res)
+    }
+
+    if(req.method === "DELETE" && req.url.startsWith("/users/")) {
+        const id = req.url.split("/")[2];
+        req.params = {id}
+        return deletUserByID(req,res)
     }
 }

@@ -31,7 +31,7 @@ export const readUserById = async (id) => {
         return {success: false, message: 'user not found'}
     }
 
-    return { user: user, wallet: wal }
+    return { success: true, user, wallet: wal }
 }
 
 export const saveDB = async (db) => {

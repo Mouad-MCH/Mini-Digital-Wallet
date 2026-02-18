@@ -1,4 +1,4 @@
-import { creatDB, readDB } from "../data/db.js";
+import { creatDB, readUserById, readDB, deletUserById } from "../data/db.js";
 import { parseBody } from "../utils/parseBody.js";
 import { creatWallet } from "./wallet.controller.js";
 
@@ -13,22 +13,24 @@ export const creatNewUser = async (req, res) => {
 
      await creatDB(user, walet)
 
-    // res.writeHead(200, {'Content-Type': 'application/json'})
+    res.writeHead(200, {'Content-Type': 'application/json'})
     res.end(JSON.stringify({success: true, message:"user is created", user}))
 }
 
 
-export const deletUserById = async (req, res) => {
-    let {id} = await req.params
-    let db = await readUserById(id)
+export const deletUserByID = async (req, res) => {
+    let {id} = req.params
+    let userId = Number(id)
+    let db = await readUserById(userId)
 
     if(!db.success) {
         res.writeHead(400, {'Content-Type': 'application/json'})
-        res.end(JSON.stringify({success: false, message:'user not found'}))       
+        res.end(JSON.stringify({success: false, message:'user not found'}))
+        return
     }
 
     try {
-        await deletUserById(id)
+        await deletUserById(userId)
         res.writeHead(200, {'Content-Type': 'application/json'})
         res.end(JSON.stringify({success: true, message:'user is deleted'}))
     }catch (error) {
@@ -40,5 +42,21 @@ export const deletUserById = async (req, res) => {
 
 export const getAllUsers = async (req, res) => {
     let users = await readDB("users")
-    res.end({ success: true, users})
+    res.writeHead(200, {"Content-Type": "application/json"})
+    res.end(JSON.stringify({ success: true, users }))
+}
+
+export const getUserByID = async (req, res) => {
+    let {id} = req.params;
+    let userId = Number(id);
+    let db = await readUserById(userId)
+
+    if(!db.success) {
+        res.writeHead(400, {'Content-Type' : 'application/json'});
+        res.end(JSON.stringify({success: false, message:'user not found'}))
+        return
+    }
+
+    res.writeHead(200, {'Content-Type': 'application/json'});
+    res.end(JSON.stringify({success: true, user: db.user, wallet: db.wallet}))
 }
