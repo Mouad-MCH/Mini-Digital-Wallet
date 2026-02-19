@@ -1,6 +1,5 @@
 import fs from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
-import { creatNewUser } from '../controllers/user.controller.js';
 
 let url_path = fileURLToPath(new URL('./db.json', import.meta.url));
 
@@ -54,7 +53,7 @@ export const creatDB = async (user, wallet) => {
     return { success: true, message: 'user is created succsusfly' }
 }
 
-// console.log(await creatNewUser({name:"MMMMMMM"}))
+
 
 
 export const deletUserById = async (id) => {
@@ -70,6 +69,3 @@ export const deletUserById = async (id) => {
 
     await saveDB(newData)
 }
-
-
-// deletUserById(1771433048472)

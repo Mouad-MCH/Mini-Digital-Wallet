@@ -54,11 +54,20 @@ export const deposit = async (req, res) => {
 
     wallet.sold += body.amount;
 
+    let operation = {
+                    id: Date.now(),
+                    wallet_id: wallet.id, 
+                    type: "withdraw",
+                    amount: body.amount,
+                    date: new Date().toISOString(),
+                }
+
+    db.operations.push(operation)
 
     try {
         await saveDB(db)
         res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ success: true, message: "solde is deposit" }));
+        res.end(JSON.stringify({ success: true, message: "solde is deposit" , operation}));
     }catch(e) {
         res.writeHead(500, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: false, message: 'solde not deposit' }));
@@ -84,6 +93,17 @@ export const withdraw = async (req, res) => {
 
     let newSold = wallet.sold - body.amount;
 
+    let operation = {
+                    id: Date.now(),
+                    wallet_id: wallet.id, 
+                    type: "withdraw",
+                    amount: body.amount,
+                    date: new Date().toISOString(),
+                }
+
+    db.operations.push(operation)
+
+
     if(newSold < 0) {
         res.writeHead(400, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: false, message: 'Your balance is insufficient' }))
@@ -103,7 +123,7 @@ export const withdraw = async (req, res) => {
         await saveDB(db)
 
         res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ success: true, message: 'withdraw succsess!' }))
+        res.end(JSON.stringify({ success: true, message: 'withdraw succsess!' , operation}))
     }catch(e) {
         res.writeHead(500, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: false, message: 'problem server try again later' }))
