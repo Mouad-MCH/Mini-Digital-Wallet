@@ -8,7 +8,7 @@ let app = http.createServer((req, res) => {
        return userRouter(req,res)
     }
 
-    if(req.url.startsWith("/wallets")) {
+    if(req.url.startsWith("/wallets") || req.url.endsWith("/wallets")) {
         return walletsRuter(req,res)
     } 
 })

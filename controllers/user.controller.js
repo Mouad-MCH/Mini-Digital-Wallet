@@ -4,6 +4,13 @@ import { creatWallet } from "./wallet.controller.js";
 
 export const creatNewUser = async (req, res) => {
     const body = await parseBody(req)
+
+    if(body.name === '') {
+        res.writeHead(400, {'Content-Type': 'application/json'})
+        res.end(JSON.stringify({success: false, message:"name is Empty"}))
+        return
+    }
+
     let user = {
         id: Date.now(),
         name: body.name
@@ -35,7 +42,7 @@ export const deletUserByID = async (req, res) => {
         res.end(JSON.stringify({success: true, message:'user is deleted'}))
     }catch (error) {
         res.writeHead(500, {'Content-Type': 'application/json'})
-         res.end(JSON.stringify({success: false, message:'user is not deleted'}))
+        res.end(JSON.stringify({success: false, message:'user is not deleted'}))
     }
 }
 
